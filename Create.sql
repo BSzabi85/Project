@@ -339,27 +339,23 @@ RAISERROR ('Creating procedures.',0 ,1) With NoWait;
 Go
 
 Create or Alter Proc uspAddPType
-@TypeName NVarchar(64),
-@Result Bit = 0 Output
+@TypeName NVarchar(64)
 as
 Begin
 	If exists (Select 1 From Person.Type Where TypeName=@TypeName)
 	Begin
 		Print 'Duplicate found!!!';
-		Set @Result = 1
-	End
+	End;
 	Else
 	Begin
 		Insert Into Person.Type(TypeName,DateModified) Values
 			(@TypeName,GetDate());
-		Set @Result = 0
 	End;
 End;
 GO
 
 Create or Alter Proc uspValidCNP
-@PNNTest Nvarchar(13),
-@Result Int Output
+@PNNTest Nvarchar(13)
 as
 Begin
 	Declare @ConvDate Date = TRY_CONVERT(Date, SUBSTRING(@PNNTest,2,6),12);
@@ -369,12 +365,12 @@ Begin
 	Set @Result = 0;
 	If LEN(@PNNTest)<>13	   
 		Begin				   
-			Set @Result = 1; --Lungime eronata.
+			Print 'PNN lenght does not meet the required length!'; --Lungime eronata.
 			Return;
 		End;
 	If ISNUMERIC(@PNNTest)<>1 and @PNNTest like '%[^0-9]%' 
 		Begin
-			Set @Result = 2; --Nu este format doar din cifre.
+		 Print 'PNN must contain only numbers!'; --Nu este format doar din cifre.
 			Return;
 		End
 	IF Left(@PNNTest,1) not like '[1-9]'
@@ -384,12 +380,12 @@ Begin
 		End;
 	IF @ConvDate is NULL Or @ConvDate < '1753-01-01' Or @ConvDate > '9999-12-31'
 		Begin
-			Set @Result = 4;  --Se verifica daca data nasterii este valida
+			Print 'Invalid date!'; --Se verifica daca data nasterii este valida
 			Return;
 		End
 	IF CAST(SUBSTRING(@PNNTest,8,2) as TinyInt) not between 1 and 52
 		Begin
-			Set @Result = 5;	--Se verifica validitatea codului de judet
+			Print 'Invalid region code!'; --Se verifica validitatea codului de judet
 			Return;
 		End
 	While @I < LEN(@PNNTest)
@@ -403,7 +399,7 @@ Begin
 		End
 	If CAST(SUBSTRING(@PNNTest, 13,1) As TinyInt)<>@PRes 
 		Begin
-			Set @Result = 6;	--Se verifica cifra de control
+			Print 'Invalid control number!';	--Se verifica cifra de control
 			Return;
 		End;
 End;
