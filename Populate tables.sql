@@ -1,4 +1,4 @@
 use SeniorCare;
 Go
 
-Declare @Res 
+Exec uspAddType
