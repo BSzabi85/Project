@@ -375,7 +375,7 @@ Begin
 		End
 	IF Left(@PNNTest,1) not like '[1-9]'
 		Begin
-			Set @Result=3; --Se verifica, daca prima cifra este intr 1 si 9
+			Print 'First number can not be 0!'; --Se verifica, daca prima cifra este intr 1 si 9
 			Return;
 		End;
 	IF @ConvDate is NULL Or @ConvDate < '1753-01-01' Or @ConvDate > '9999-12-31'
