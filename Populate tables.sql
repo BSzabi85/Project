@@ -1,4 +1,5 @@
 use SeniorCare;
 Go
 
-Exec uspAddType
+Exec uspAddType @TypeName = 'Database Admin.';
+Exec uspAddType @Result = 'Administrator';
