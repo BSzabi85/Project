@@ -3,7 +3,7 @@ Go
 
 RaisError ('Populating table "Person.Type",0 ,1) With NoWait;
 
-Exec uspAddType @TypeName = 'Database Admin';
+Exec uspAddType @TypeName = 'Administrator baza date';
 Go
 
 Exec uspAddType @TypeName = 'Administrator';
@@ -12,7 +12,7 @@ Go
 Exec uspAddType @TypeName = 'Asistent social';
 Go
 
-Exec uspAddType @TypeName = 'Financiar contabil';
+Exec uspAddType @TypeName = 'Financiar-contabil';
 Go
 
 Exec uspAddType @TypeName = 'Medical';
