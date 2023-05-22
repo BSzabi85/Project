@@ -1,92 +1,67 @@
-Use SeniorCare;
-GO
+If exists (Select name from sys.databases where name = 'SeniorCare')
+Begin
+  Use SeniorCare;
 
-Drop Proc if exists uspAddPType;
-Go
+  Drop Proc if exists uspAddPType;
 
-Drop proc if exists uspValidCNP;
-Go
+  Drop proc if exists uspValidCNP;
 
-Drop Proc if exists uspAddPersonTables;
-Go
+  Drop Proc if exists uspAddPersonTables;
 
-Drop Proc if exists uspAddMedicalTables;
-Go
+  Drop Proc if exists uspAddMedicalTables;
 
-Drop Proc if exists uspAddKinetoTables;
-Go
+  Drop Proc if exists uspAddKinetoTables;
 
-Drop Proc if exists uspAddFinancialTables;
-Go
+  Drop Proc if exists uspAddFinancialTables;
 
-Drop Table if exists Financial.Payed;
-Go
+  Drop Table if exists Financial.Payed;
 
-Drop Table if exists Financial.Payments;
-Go
+  Drop Table if exists Financial.Payments;
 
-Drop Table if exists Financial.AmmountToPay;
-Go
+  Drop Table if exists Financial.AmmountToPay;
 
-Drop Schema if exists Financial;
-Go
+  Drop Schema if exists Financial;
 
-Drop Table if exists Kineto.ExerciseList;
-Go
+  Drop Table if exists Kineto.ExerciseList;
 
-Drop Table if exists Kineto.Recurence;
-Go
+  Drop Table if exists Kineto.Recurence;
 
-Drop Table if exists Kineto.Exercises;
-Go
+  Drop Table if exists Kineto.Exercises;
 
-Drop Schema if exists Kineto;
-Go
+  Drop Schema if exists Kineto;
 
-Drop Table if exists Medical.Emergencies;
-Go
+  Drop Table if exists Medical.Emergencies;
 
-Drop Table if exists Medical.Health;
-Go
+  Drop Table if exists Medical.Health;
 
-Drop Table if exists Medical.Medication;
-Go
+  Drop Table if exists Medical.Medication;
 
-Drop Table if exists Medical.MedicationHour;
-Go
+  Drop Table if exists Medical.MedicationHour;
 
-Drop Table if exists Medical.Medicines;
-Go
+  Drop Table if exists Medical.Medicines;
 
-Drop Schema if exists Medical;
-Go
+  Drop Schema if exists Medical;
 
-Drop Table if exists Person.Login;
-Go
+  Drop Table if exists Person.Login;
 
-Drop Table if exists Person.Email;
-Go
+  Drop Table if exists Person.Email;
 
-Drop Table if exists Person.Phone;
-Go
+  Drop Table if exists Person.Phone;
 
-Drop Table if exists Person.ContactName;
-Go
+  Drop Table if exists Person.ContactName;
 
-Drop Table if exists Person.Address;
-Go
+  Drop Table if exists Person.Address;
 
-Drop Table if exists Person.Person;
-Go
+  Drop Table if exists Person.Person;
 
-Drop Table if exists Person.Type;
-Go
+  Drop Table if exists Person.Type;
 
-Drop Schema if exists Person;
+  Drop Schema if exists Person;
+End;
 Go
 
 Use master;
 Go
 
-Drop Database SeniorCare;
+Drop Database if exists SeniorCare;
 Go
