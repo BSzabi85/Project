@@ -1,7 +1,6 @@
 use SeniorCare;
 Go
 
-
 RaisError ('Populating table "Person.Type",0 ,1) With NoWait;
 
 Exec uspAddType @TypeName = 'Database Admin';
