@@ -370,12 +370,14 @@ Begin
   			Set @Result = 1;
 			Return;
 		End;
+		
 	If ISNUMERIC(@PNNTest)<>1 and @PNNTest like '%[^0-9]%' 
 		Begin
 			RaisError ('PNN must contain only numbers!',0 ,1) With NoWait;  --Nu este format doar din cifre.
    			Set @Result = 2;
 			Return;
-		End
+		End;
+		
 	IF Left(@PNNTest,1) not like '[1-9]'
 		Begin 
 			RaisError ('First number can not be 0!',0 ,1) With NoWait; --Se verifica, daca prima cifra este intr 1 si 9
@@ -387,22 +389,26 @@ Begin
 			RaisError ('Invalid date!',0 ,1) With NoWait; --Se verifica daca data nasterii este valida
   			Set @Result = 4; 
 			Return;
-		End
+		End;
+		
 	IF CAST(SUBSTRING(@PNNTest,8,2) as TinyInt) not between 1 and 52
 		Begin
 			RaisError ('Invalid region code!',0 ,1) With NoWait; --Se verifica validitatea codului de judet
    			Set @Result = 5;
 			Return;
-		End
+		End;
+		
 	While @I < LEN(@PNNTest)
 		Begin
 			Set @PRes = @PRes + (CAST(SUBSTRING(@PNNTest,@I,1) as Int) * CAST(SUBSTRING(@Pon,@I,1) as Int));
 			Set @I += 1;
-		End
+		End;
+		
 	While @PRes>=11
 		Begin
 			Set @PRes -= 11;
-		End
+		End;
+		
 	If CAST(SUBSTRING(@PNNTest, 13,1) As TinyInt)<>@PRes 
 		Begin			
 			RaisError ('Invalid control number!',0 ,1) With NoWait; --Se verifica cifra de control
