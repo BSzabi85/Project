@@ -1,47 +1,47 @@
-RAISERROR ('Creating database "SeniorCare".',0 ,1) With NoWait;
+RaisError ('Creating database "SeniorCare".',0 ,1) With NoWait;
 Go
 
 If not exists (Select name from sys.databases where name = 'SeniorCare')
 	Begin
 		Create Database SeniorCare;
-		RAISERROR ('"SeniorCare" database created successfully.',0 ,1) With NoWait;
+		RaisError ('"SeniorCare" database created successfully.',0 ,1) With NoWait;
 	End;
 GO
 
-RAISERROR ('Using "SeniorCare" database.',0 ,1) With NoWait;
+RaisError ('Using "SeniorCare" database.',0 ,1) With NoWait;
 Use SeniorCare;
 GO
 
-RAISERROR ('Creating database schemas.',0 ,1) With NoWait;
+RaisError ('Creating database schemas.',0 ,1) With NoWait;
 If not exists (Select 1 From INFORMATION_SCHEMA.SCHEMATA Where SCHEMA_NAME = 'Person')
 	Begin
 		Exec ('Create Schema Person Authorization dbo');
-		RAISERROR ('"Person" schema created successfully.',0 ,1) With NoWait;
+		RaisError ('"Person" schema created successfully.',0 ,1) With NoWait;
 	End;
 Go
 
 If not exists (Select 1 From INFORMATION_SCHEMA.SCHEMATA Where SCHEMA_NAME='Medical')
 	Begin
 		Exec('Create Schema Medical Authorization dbo');
-		RAISERROR ('"Medical" schema created successfully.',0 ,1) With NoWait;
+		RaisError ('"Medical" schema created successfully.',0 ,1) With NoWait;
 	End;
 Go
 
 If not exists (Select 1 From INFORMATION_SCHEMA.SCHEMATA Where SCHEMA_NAME='Kineto')
 	Begin
 		Exec('Create Schema Kineto Authorization dbo');
-		RAISERROR ('"Kineto" schema created successfully.',0 ,1) With NoWait;
+		RaisError ('"Kineto" schema created successfully.',0 ,1) With NoWait;
 	End;
 Go
 
 If not exists (Select 1 From INFORMATION_SCHEMA.SCHEMATA Where SCHEMA_NAME='Financial')
 	Begin
 		Exec('Create Schema Financial Authorization dbo');
-		RAISERROR ('"Financial" schema created successfully.',0 ,1) With NoWait;
+		RaisError ('"Financial" schema created successfully.',0 ,1) With NoWait;
 	End;
 Go
 
-RAISERROR ('Creating database tables.',0 ,1) With NoWait;
+RaisError ('Creating database tables.',0 ,1) With NoWait;
 If not exists ( Select 1 From sys.tables Where Name='Person.Type' and Type = 'U')
 Begin
 	Create Table Person.[Type]
@@ -50,7 +50,7 @@ Begin
 		TypeName NVarchar(64) not NULL,
 		DateModified DateTime not NULL
 		);
-	RAISERROR ('Person.Type table created successfully.',0 ,1) With NoWait;
+	RaisError ('Person.Type table created successfully.',0 ,1) With NoWait;
 End;
 Go
 
@@ -62,7 +62,7 @@ Begin
 		ContactName NVarchar(256) not NULL,
 		DateModified DateTime not NULL
 		);
-	RAISERROR ('Person.ContactName table created successfully.',0 ,1) With NoWait;
+	RaisError ('Person.ContactName table created successfully.',0 ,1) With NoWait;
 End;
 Go
 	
@@ -79,7 +79,7 @@ Begin
 		DateModified Datetime not NULL,
 		Foreign Key (PersonType) References Person.Type(TypeID)
 		);
-	RAISERROR ('Person.Person table created successfully.',0 ,1) With NoWait;
+	RaisError ('Person.Person table created successfully.',0 ,1) With NoWait;
 End;
 Go
 
@@ -97,7 +97,7 @@ Begin
 		DateModified DateTime not NULL,
 		Foreign Key (PersonID) References Person.Person(PersonID)
 		);
-	RAISERROR ('Person.Address table created successfully.',0 ,1) With NoWait;
+	RaisError ('Person.Address table created successfully.',0 ,1) With NoWait;
 End;
 Go
 	
@@ -113,7 +113,7 @@ Begin
 		Foreign Key (PersonID) References Person.Person(PersonID),
 		Foreign Key (ContactID) References Person.ContactName(ContactID)
 		);
-	RAISERROR ('Person.Phone table created successfully.',0 ,1) With NoWait;
+	RaisError ('Person.Phone table created successfully.',0 ,1) With NoWait;
 End;
 Go
 	
@@ -129,7 +129,7 @@ Begin
 		Foreign Key (PersonID) References Person.Person(PersonID),
 		Foreign Key (ContactID) References Person.ContactName(ContactID)
 		);
-	RAISERROR ('Person.Email table created successfully.',0 ,1) With NoWait;
+	RaisError ('Person.Email table created successfully.',0 ,1) With NoWait;
 End;
 Go
 
@@ -144,7 +144,7 @@ Begin
 		DateModified DateTime not NULL,
 		Foreign Key (PersonID) References Person.Person(PersonID)
 		);
-	RAISERROR ('Person.Login table created successfully.',0 ,1) With NoWait;
+	RaisError ('Person.Login table created successfully.',0 ,1) With NoWait;
 End;
 Go
 
@@ -160,7 +160,7 @@ Begin
 		ModifierID Int not NULL,
 		Foreign Key (ModifierID) References Person.Person(PersonID)
 		);
-	RAISERROR ('Medical.Medicines table created successfully.',0 ,1) With NoWait;
+	RaisError ('Medical.Medicines table created successfully.',0 ,1) With NoWait;
 End;
 Go
 
@@ -170,7 +170,7 @@ Create Table Medical.MedicationHour(
 	MedicationHourID Int Primary Key Identity not NULL,
 	MedicationTime Time not NULL,
 	DateModified Datetime not NULL);
-	RAISERROR ('Medical.Medicines table created successfully.',0 ,1) With NoWait;
+	RaisError ('Medical.Medicines table created successfully.',0 ,1) With NoWait;
 End;
 Go
 
@@ -187,7 +187,7 @@ Begin
 		Foreign Key (MedicineID) References Medical.Medicines(MedicineID),
 		Foreign Key (MedicationHourID) References Medical.MedicationHour(MedicationHourID)
 		);
-	RAISERROR ('Medical.Medication table created successfully.',0 ,1) With NoWait;
+	RaisError ('Medical.Medication table created successfully.',0 ,1) With NoWait;
 End;
 Go
 
@@ -210,7 +210,7 @@ Begin
 		Foreign Key (PersonID) References Person.Person(PersonID),
 		Foreign Key (LoginID) References Person.Login(LoginID)
 		);
-	RAISERROR ('Medical.Health table created successfully.',0 ,1) With NoWait;
+	RaisError ('Medical.Health table created successfully.',0 ,1) With NoWait;
 End;
 Go
 
@@ -232,7 +232,7 @@ Begin
 		Foreign Key (PersonID) References Person.Person(PersonID),
 		Foreign Key (LoginID) References Person.Login(LoginID)
 		);
-	RAISERROR ('Medical.Emergencies table created successfully.',0 ,1) With NoWait;
+	RaisError ('Medical.Emergencies table created successfully.',0 ,1) With NoWait;
 End;
 Go
 
@@ -246,7 +246,7 @@ Begin
 		DateModified Datetime not NULL,
 		Foreign Key (LoginID) References Person.Login (LoginID)
 		);
-	RAISERROR ('Kineto.Exercises table created successfully.',0 ,1) With NoWait;
+	RaisError ('Kineto.Exercises table created successfully.',0 ,1) With NoWait;
 End;
 Go
 
@@ -258,7 +258,7 @@ Begin
 		RecurenceName NVarchar(32) not NULL,
 		DateModified DateTime not NULL
 		);
-	RAISERROR ('Kineto.Recurence table created successfully.',0 ,1) With NoWait;
+	RaisError ('Kineto.Recurence table created successfully.',0 ,1) With NoWait;
 End;
 Go
 
@@ -278,7 +278,7 @@ Begin
 		Foreign Key (RecurenceID) References Kineto.Recurence(RecurenceID),
 		Foreign Key (LoginID) References Person.Login(LoginID)
 		);
-	RAISERROR ('Kineto.ExercisesList table created successfully.',0 ,1) With NoWait;
+	RaisError ('Kineto.ExercisesList table created successfully.',0 ,1) With NoWait;
 End;
 Go
 
@@ -295,7 +295,7 @@ Begin
 		Foreign Key (PersonID) References Person.Person(PersonID),
 		Foreign Key (LoginID) References Person.Login(LoginID)
 		);
-	RAISERROR ('Financial.AmmountToPay table created successfully.',0 ,1) With NoWait;
+	RaisError ('Financial.AmmountToPay table created successfully.',0 ,1) With NoWait;
 End;
 Go
 
@@ -313,7 +313,7 @@ Begin
 		Foreign Key (PersonID) References Person.Person(PersonID),
 		Foreign Key (AmmountToPayID) References Financial.AmmountToPay(AmmountToPayID)
 		);
-	RAISERROR ('Financial.Payments table created successfully.',0 ,1) With NoWait;
+	RaisError ('Financial.Payments table created successfully.',0 ,1) With NoWait;
 End;
 Go
 
@@ -331,11 +331,11 @@ Begin
 		Foreign Key (PaymentID) References Financial.Payments(PaymentID),
 		Foreign Key (LoginID) References Person.Login(LoginID)
 		);
-	RAISERROR ('Financial.Payed table created successfully.',0 ,1) With NoWait;
+	RaisError ('Financial.Payed table created successfully.',0 ,1) With NoWait;
 End;
 Go
 
-RAISERROR ('Creating procedures.',0 ,1) With NoWait;
+RaisError ('Creating procedures.',0 ,1) With NoWait;
 Go
 
 Create or Alter Proc uspAddPType
@@ -362,35 +362,36 @@ Begin
 	Declare @ConvDate Date = TRY_CONVERT(Date, SUBSTRING(@PNNTest,2,6),12);
 	Declare @I Int = 1;
 	Declare @PRes Int = 0;
-	Declare @Pon NVarchar(12) = '279146358279'
+	Declare @Pon NVarchar(12) = '279146358279'
+
 	If LEN(@PNNTest)<>13	   
-		Begin				   
-			Print 'PNN lenght does not meet the required length!'; --Lungime eronata.
-  Set @Result = 1;
+		Begin	
+			RaisError ('PNN lenght does not meet the required length!',0 ,1) With NoWait; --Lungime eronata.
+  			Set @Result = 1;
 			Return;
 		End;
 	If ISNUMERIC(@PNNTest)<>1 and @PNNTest like '%[^0-9]%' 
 		Begin
-		 Print 'PNN must contain only numbers!'; --Nu este format doar din cifre.
-   Set @Result = 1;
+			RaisError ('PNN must contain only numbers!',0 ,1) With NoWait;  --Nu este format doar din cifre.
+   			Set @Result = 2;
 			Return;
 		End
 	IF Left(@PNNTest,1) not like '[1-9]'
-		Begin
-			Print 'First number can not be 0!'; --Se verifica, daca prima cifra este intr 1 si 9
-   Set @Result = 1; 
+		Begin 
+			RaisError ('First number can not be 0!',0 ,1) With NoWait; --Se verifica, daca prima cifra este intr 1 si 9
+   			Set @Result = 3; 
 			Return;
 		End;
 	IF @ConvDate is NULL Or @ConvDate < '1753-01-01' Or @ConvDate > '9999-12-31'
 		Begin
-			Print 'Invalid date!'; --Se verifica daca data nasterii este valida
-  Set @Result = 1; 
+			RaisError ('Invalid date!',0 ,1) With NoWait; --Se verifica daca data nasterii este valida
+  			Set @Result = 4; 
 			Return;
 		End
 	IF CAST(SUBSTRING(@PNNTest,8,2) as TinyInt) not between 1 and 52
 		Begin
-			Print 'Invalid region code!'; --Se verifica validitatea codului de judet
-   Set @Result = 1;
+			RaisError ('Invalid region code!',0 ,1) With NoWait; --Se verifica validitatea codului de judet
+   			Set @Result = 5;
 			Return;
 		End
 	While @I < LEN(@PNNTest)
@@ -403,14 +404,14 @@ Begin
 			Set @PRes -= 11;
 		End
 	If CAST(SUBSTRING(@PNNTest, 13,1) As TinyInt)<>@PRes 
-		Begin
-			Print 'Invalid control number!';	--Se verifica cifra de control
-   Set @Result = 1;
+		Begin			
+			RaisError ('Invalid control number!',0 ,1) With NoWait; --Se verifica cifra de control
+   			Set @Result = 6;
 			Return;
 		End;
 End;
 Go
 
-RAISERROR ('Done.',0 ,1) With NoWait;
+RaisError ('Done.',0 ,1) With NoWait;
 
 Use master;
