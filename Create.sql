@@ -13,6 +13,8 @@ Use SeniorCare;
 GO
 
 RaisError ('Creating database schemas.',0 ,1) With NoWait;
+Go
+
 If not exists (Select 1 From INFORMATION_SCHEMA.SCHEMATA Where SCHEMA_NAME = 'Person')
 	Begin
 		Exec ('Create Schema Person Authorization dbo');
@@ -42,6 +44,8 @@ If not exists (Select 1 From INFORMATION_SCHEMA.SCHEMATA Where SCHEMA_NAME='Fina
 Go
 
 RaisError ('Creating database tables.',0 ,1) With NoWait;
+Go
+
 If not exists ( Select 1 From sys.tables Where Name='Person.Type' and Type = 'U')
 Begin
 	Create Table Person.[Type]
@@ -419,5 +423,7 @@ End;
 Go
 
 RaisError ('Done.',0 ,1) With NoWait;
+Go
 
 Use master;
+Go
