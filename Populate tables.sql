@@ -2,5 +2,5 @@ use SeniorCare;
 Go
 
 Exec uspAddType @TypeName = 'Database Admin';
-Exec uspAddType @Result = 'Administrator';
-Exec uspAddType @Result = 'Financiar';
+Exec uspAddType @TypeName = 'Administrator';
+Exec uspAddType @TypeName = 'Financiar';
