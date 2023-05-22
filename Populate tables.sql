@@ -36,7 +36,7 @@ Go
 Exec uspAddType @TypeName = 'Portar';
 Go
 
-Exec uspAddType @TypeName = '';
+Exec uspAddType @TypeName = 'Ingrijit';
 
 RaisError ('Done.',0, 1) With NoWait;
 
