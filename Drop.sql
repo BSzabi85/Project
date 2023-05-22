@@ -20,15 +20,11 @@ Begin
 
   Drop Table if exists Financial.AmmountToPay;
 
-  Drop Schema if exists Financial;
-
   Drop Table if exists Kineto.ExerciseList;
 
   Drop Table if exists Kineto.Recurence;
 
   Drop Table if exists Kineto.Exercises;
-
-  Drop Schema if exists Kineto;
 
   Drop Table if exists Medical.Emergencies;
 
@@ -39,8 +35,6 @@ Begin
   Drop Table if exists Medical.MedicationHour;
 
   Drop Table if exists Medical.Medicines;
-
-  Drop Schema if exists Medical;
 
   Drop Table if exists Person.Login;
 
@@ -55,6 +49,12 @@ Begin
   Drop Table if exists Person.Person;
 
   Drop Table if exists Person.Type;
+  
+  Drop Schema if exists Financial;  
+  
+  Drop Schema if exists Kineto;
+  
+  Drop Schema if exists Medical;  
 
   Drop Schema if exists Person;
 End;
