@@ -6,14 +6,6 @@ Begin
 
   Drop proc if exists uspValidCNP;
 
-  Drop Proc if exists uspAddPersonTables;
-
-  Drop Proc if exists uspAddMedicalTables;
-
-  Drop Proc if exists uspAddKinetoTables;
-
-  Drop Proc if exists uspAddFinancialTables;
-
   Drop Table if exists Financial.Payed;
 
   Drop Table if exists Financial.Payments;
