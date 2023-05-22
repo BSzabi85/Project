@@ -36,6 +36,8 @@ Go
 Exec uspAddType @TypeName = 'Portar';
 Go
 
+Exec uspAddType @TypeName = '';
+
 RaisError ('Done.',0, 1) With NoWait;
 
 use master;
