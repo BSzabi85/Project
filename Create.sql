@@ -1,8 +1,6 @@
-RaisError ('Creating database "SeniorCare".',0 ,1) With NoWait;
-Go
-
 If not exists (Select name from sys.databases where name = 'SeniorCare')
 	Begin
+		RaisError ('Creating database "SeniorCare".',0 ,1) With NoWait;
 		Create Database SeniorCare;
 		RaisError ('"SeniorCare" database created successfully.',0 ,1) With NoWait;
 	End;
