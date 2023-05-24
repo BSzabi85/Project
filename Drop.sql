@@ -6,18 +6,6 @@ Begin
 
   Drop proc if exists uspValidCNP;
 
-  Drop Table if exists Financial.Payed;
-
-  Drop Table if exists Financial.Payments;
-
-  Drop Table if exists Financial.AmmountToPay;
-
-  Drop Table if exists Kineto.ExerciseList;
-
-  Drop Table if exists Kineto.Recurence;
-
-  Drop Table if exists Kineto.Exercises;
-
   Drop Table if exists Medical.Emergencies;
 
   Drop Table if exists Medical.Health;
@@ -41,11 +29,7 @@ Begin
   Drop Table if exists Person.Person;
 
   Drop Table if exists Person.Type;
-  
-  Drop Schema if exists Financial;  
-  
-  Drop Schema if exists Kineto;
-  
+    
   Drop Schema if exists Medical;  
 
   Drop Schema if exists Person;
