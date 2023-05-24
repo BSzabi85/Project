@@ -1,7 +1,7 @@
 use SeniorCare;
 Go
 
-RaisError ('Populating table "Person.Type",0 ,1) With NoWait;
+RaisError ('Populating table "Person.Type',0 ,1) With NoWait;
 
 Exec uspAddType @TypeName = 'Administrator baza date';
 Go
@@ -12,28 +12,10 @@ Go
 Exec uspAddType @TypeName = 'Asistent social';
 Go
 
-Exec uspAddType @TypeName = 'Financiar-contabil';
-Go
-
 Exec uspAddType @TypeName = 'Medical';
 Go
 
-Exec uspAddType @TypeName = 'Terapeut';
-Go
-
-Exec uspAddType @TypeNamr = 'Ingrijitor';
-Go
-
-Exec uspAddType @TypeName = 'Bucatar';
-Go
-
-Exec uspAddType @TypeName = 'Personal curatenie';
-Go
-
-Exec uspAddType @TypeName = 'Personal intretinere';
-Go
-
-Exec uspAddType @TypeName = 'Portar';
+Exec uspAddType @TypeName = 'Ingrijitor';
 Go
 
 Exec uspAddType @TypeName = 'Ingrijit';
