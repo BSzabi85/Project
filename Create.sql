@@ -42,9 +42,9 @@ Begin
 End;
 Go
 
-If not exists ( Select 1 From sys.tables Where Name='Person.ContactName' and Type = 'U')
+If not exists ( Select 1 From sys.tables Where Name='Person.Contact' and Type = 'U')
 Begin
-	Create Table Person.ContactName
+	Create Table Person.Contact
 		(
 		ContactID Int Primary Key Identity(1,1) not NULL,
 		ContactName NVarchar(256) not NULL,
@@ -306,6 +306,20 @@ Begin
 		End;
 End;
 Go
+
+Create or Alter Proc uspAddContact
+@CName as NVarchar(256)
+as
+Begin
+	If Exists ( Select 1 From Person.ContactName Where ContactName=@CName)
+	Begin
+		Print 'Duplicate found!!!';
+	End
+	Else
+	Begin
+		Insert Into Person.Contact (ContactName, DateModified) Values (@CName,Getdate());
+	End
+End;
 
 RaisError ('Done.',0 ,1) With NoWait;
 Go
