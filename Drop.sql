@@ -22,7 +22,7 @@ Begin
 
   Drop Table if exists Person.Phone;
 
-  Drop Table if exists Person.ContactName;
+  Drop Table if exists Person.Contact;
 
   Drop Table if exists Person.Address;
 
