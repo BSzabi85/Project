@@ -27,20 +27,6 @@ If not exists (Select 1 From INFORMATION_SCHEMA.SCHEMATA Where SCHEMA_NAME='Medi
 	End;
 Go
 
-If not exists (Select 1 From INFORMATION_SCHEMA.SCHEMATA Where SCHEMA_NAME='Kineto')
-	Begin
-		Exec('Create Schema Kineto Authorization dbo');
-		RaisError ('"Kineto" schema created successfully.',0 ,1) With NoWait;
-	End;
-Go
-
-If not exists (Select 1 From INFORMATION_SCHEMA.SCHEMATA Where SCHEMA_NAME='Financial')
-	Begin
-		Exec('Create Schema Financial Authorization dbo');
-		RaisError ('"Financial" schema created successfully.',0 ,1) With NoWait;
-	End;
-Go
-
 RaisError ('Creating database tables.',0 ,1) With NoWait;
 Go
 
@@ -235,105 +221,6 @@ Begin
 		Foreign Key (LoginID) References Person.Login(LoginID)
 		);
 	RaisError ('Medical.Emergencies table created successfully.',0 ,1) With NoWait;
-End;
-Go
-
-If not exists ( Select 1 From sys.tables Where Name='Kineto.Exercises' and Type = 'U')
-Begin
-	Create Table Kineto.Exercises
-		(
-		ExerciseID Int Primary Key Identity(1,1) not NULL,
-		ExerciseName NVarchar not NULL,
-		LoginID Int not NULL,
-		DateModified Datetime not NULL,
-		Foreign Key (LoginID) References Person.Login (LoginID)
-		);
-	RaisError ('Kineto.Exercises table created successfully.',0 ,1) With NoWait;
-End;
-Go
-
-If not exists ( Select 1 From sys.tables Where Name='Kineto.Recurence' and Type = 'U')
-Begin
-	Create Table Kineto.Recurence
-		(
-		RecurenceID Int Primary Key Identity(1,1) not NULL,
-		RecurenceName NVarchar(32) not NULL,
-		DateModified DateTime not NULL
-		);
-	RaisError ('Kineto.Recurence table created successfully.',0 ,1) With NoWait;
-End;
-Go
-
-If not exists ( Select 1 From sys.tables Where Name='Kineto.ExerciseList' and Type = 'U')
-Begin
-	Create Table Kineto.ExerciseList
-		(
-		ExerciseListID Int Primary Key Identity(1,1) not NULL,
-		PersonID Int Not NULL,
-		ExerciseID Int not NULL,
-		RecurenceID Int not NULL,
-		ExerciseDescription NVarchar(Max) not NULL,
-		LoginID INT not NULL,
-		DateModified Datetime not NULL,
-		Foreign Key (PersonID) References Person.Person(PersonID),
-		Foreign Key (ExerciseID) References Kineto.Exercises(ExerciseID),
-		Foreign Key (RecurenceID) References Kineto.Recurence(RecurenceID),
-		Foreign Key (LoginID) References Person.Login(LoginID)
-		);
-	RaisError ('Kineto.ExercisesList table created successfully.',0 ,1) With NoWait;
-End;
-Go
-
-If not exists ( Select 1 From sys.tables Where Name='Financial.AmmountToPay' and Type = 'U')
-Begin
-	Create Table Financial.AmmountToPay
-		(
-		AmmountToPayID Int Primary Key Identity(1,1) not NULL,
-		PersonID Int not NULL,
-		DateFrom Date not NULL,
-		Ammount Decimal(12,2) not NULL,
-		LoginID Int not NULL,
-		DateModified DateTime not NULL,
-		Foreign Key (PersonID) References Person.Person(PersonID),
-		Foreign Key (LoginID) References Person.Login(LoginID)
-		);
-	RaisError ('Financial.AmmountToPay table created successfully.',0 ,1) With NoWait;
-End;
-Go
-
-If not exists ( Select 1 From sys.tables Where Name='Financial.Payments' and Type = 'U')
-Begin
-	Create Table Financial.Payments
-		(
-		PaymentID Int Primary Key Identity(1,1) not NULL,
-		PersonID int not NULL,
-		PaymentStatusID Tinyint not NULL,
-		AmmountToPayID Int NULL,
-		AmmountPayedID Int NULL,
-		DueDate Date not NULL,
-		DateModified Datetime not NULL,
-		Foreign Key (PersonID) References Person.Person(PersonID),
-		Foreign Key (AmmountToPayID) References Financial.AmmountToPay(AmmountToPayID)
-		);
-	RaisError ('Financial.Payments table created successfully.',0 ,1) With NoWait;
-End;
-Go
-
-If not exists ( Select 1 From sys.tables Where Name='Financial.Payed' and Type = 'U')
-Begin
-	Create Table Financial.Payed
-		(
-		PayedID Int Primary Key Identity(1,1) not NULL,
-		PersonID Int not NULL,
-		PaymentID Int NULL,
-		PayedAmmount Decimal(12,2) not NULL,
-		LoginID Int not NULL,
-		DateModified Datetime not NULL,
-		Foreign Key (PersonID) References Person.Person(PersonID),
-		Foreign Key (PaymentID) References Financial.Payments(PaymentID),
-		Foreign Key (LoginID) References Person.Login(LoginID)
-		);
-	RaisError ('Financial.Payed table created successfully.',0 ,1) With NoWait;
 End;
 Go
 
