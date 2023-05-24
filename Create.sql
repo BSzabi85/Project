@@ -4,11 +4,11 @@ If not exists (Select name from sys.databases where name = 'SeniorCare')
 		Create Database SeniorCare;
 		RaisError ('"SeniorCare" database created successfully.',0 ,1) With NoWait;
 	End;
-GO
+Go
 
 RaisError ('Using "SeniorCare" database.',0 ,1) With NoWait;
 Use SeniorCare;
-GO
+Go
 
 RaisError ('Creating database schemas.',0 ,1) With NoWait;
 Go
