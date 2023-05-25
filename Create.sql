@@ -81,7 +81,8 @@ Begin
 		AddressLine2 NVarchar(512) NULL,
 		City NVarchar(128) NULL,
 		Province NVarchar(64) NULL,
-		PostalCode NVarchar(30) NULL,
+		Country NVarchar(64) NULL,
+		PostalCode NVarchar(32) NULL,
 		DateModified DateTime not NULL,
 		Foreign Key (PersonID) References Person.Person(PersonID)
 		);
@@ -94,11 +95,9 @@ Begin
 	Create Table Person.Phone
 		(
 		PhoneID Int Primary Key Identity(1,1) not NULL,
-		PersonID Int not NULL,
 		ContactID Int not NULL,
 		PhoneNO NVarchar(15) NULL,
 		DateModified DateTime not NULL,
-		Foreign Key (PersonID) References Person.Person(PersonID),
 		Foreign Key (ContactID) References Person.ContactName(ContactID)
 		);
 	RaisError ('Person.Phone table created successfully.',0 ,1) With NoWait;
@@ -110,11 +109,9 @@ Begin
 	Create Table Person.Email
 		(
 		EmailID Int Primary Key Identity(1,1) not NULL,
-		PersonID Int not NULL,
 		ContactID Int not NULL,
 		EmailAddress NVarchar(256) NULL,
 		DateModified Datetime not NULL,
-		Foreign Key (PersonID) References Person.Person(PersonID),
 		Foreign Key (ContactID) References Person.ContactName(ContactID)
 		);
 	RaisError ('Person.Email table created successfully.',0 ,1) With NoWait;
@@ -224,105 +221,5 @@ Begin
 End;
 Go
 
-RaisError ('Creating procedures.',0 ,1) With NoWait;
-Go
-
-Create or Alter Proc uspAddPType
-@TypeName NVarchar(64)
-as
-Begin
-	If exists (Select 1 From Person.Type Where TypeName=@TypeName)
-	Begin
-		Print 'Duplicate found!!!';
-	End;
-	Else
-	Begin
-		Insert Into Person.Type(TypeName,DateModified) Values
-			(@TypeName,GetDate());
-	End;
-End;
-GO
-
-Create or Alter Proc uspValidCNP
-@PNNTest Nvarchar(13),
-@Result Bit = 0
-as
-Begin
-	Declare @ConvDate Date = TRY_CONVERT(Date, SUBSTRING(@PNNTest,2,6),12);
-	Declare @I Int = 1;
-	Declare @PRes Int = 0;
-	Declare @Pon NVarchar(12) = '279146358279'
-
-	If LEN(@PNNTest)<>13	   
-		Begin	
-			RaisError ('PNN lenght does not meet the required length!',0 ,1) With NoWait; --Lungime eronata.
-  			Set @Result = 1;
-			Return;
-		End;
-		
-	If ISNUMERIC(@PNNTest)<>1 and @PNNTest like '%[^0-9]%' 
-		Begin
-			RaisError ('PNN must contain only numbers!',0 ,1) With NoWait;  --Nu este format doar din cifre.
-   			Set @Result = 2;
-			Return;
-		End;
-		
-	IF Left(@PNNTest,1) not like '[1-9]'
-		Begin 
-			RaisError ('First number can not be 0!',0 ,1) With NoWait; --Se verifica, daca prima cifra este intr 1 si 9
-   			Set @Result = 3; 
-			Return;
-		End;
-	IF @ConvDate is NULL Or @ConvDate < '1753-01-01' Or @ConvDate > '9999-12-31'
-		Begin
-			RaisError ('Invalid date!',0 ,1) With NoWait; --Se verifica daca data nasterii este valida
-  			Set @Result = 4; 
-			Return;
-		End;
-		
-	IF CAST(SUBSTRING(@PNNTest,8,2) as TinyInt) not between 1 and 52
-		Begin
-			RaisError ('Invalid region code!',0 ,1) With NoWait; --Se verifica validitatea codului de judet
-   			Set @Result = 5;
-			Return;
-		End;
-		
-	While @I < LEN(@PNNTest)
-		Begin
-			Set @PRes = @PRes + (CAST(SUBSTRING(@PNNTest,@I,1) as Int) * CAST(SUBSTRING(@Pon,@I,1) as Int));
-			Set @I += 1;
-		End;
-		
-	While @PRes>=11
-		Begin
-			Set @PRes -= 11;
-		End;
-		
-	If CAST(SUBSTRING(@PNNTest, 13,1) As TinyInt)<>@PRes 
-		Begin			
-			RaisError ('Invalid control number!',0 ,1) With NoWait; --Se verifica cifra de control
-   			Set @Result = 6;
-			Return;
-		End;
-End;
-Go
-
-Create or Alter Proc uspAddContact
-@CName as NVarchar(256)
-as
-Begin
-	If Exists ( Select 1 From Person.ContactName Where ContactName=@CName)
-	Begin
-		Print 'Duplicate found!!!';
-	End
-	Else
-	Begin
-		Insert Into Person.Contact (ContactName, DateModified) Values (@CName,Getdate());
-	End
-End;
-
-RaisError ('Done.',0 ,1) With NoWait;
-Go
-
-Use master;
+use master;
 Go
