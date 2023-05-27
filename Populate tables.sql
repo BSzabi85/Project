@@ -38,7 +38,7 @@ Exec uspAddPerson
 	@Prov = 'Cluj',
 	@PCode = '407280',
 	@PhoneNo = '0040752486002',
-	@Email = 'banyaisz85@gmail.com',
+	@Email = 'b*******5@gmail.com',
 	@UserName = 'Bszabi85',
 	@PHash = 'TestPassword';
 	
