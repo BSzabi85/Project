@@ -33,7 +33,7 @@ Exec uspAddPerson
 	@FName = 'Banyai',
 	@LName = 'Szabolcs',
 	@PNN = '1234567890123',
-	@Aline1 = 'Str. Florilor, ',
+	@Aline1 = 'Str. Florilor ',
 	@City = 'Floresti',
 	@Prov = 'Cluj',
 	@PCode = '407280',
@@ -41,5 +41,7 @@ Exec uspAddPerson
 	@Email = 'banyaisz85@gmail.com',
 	@UserName = 'Bszabi85',
 	@PHash = 'TestPassword';
+	
+--Va genera eroare pentru ca @PNN nu este un CNP VALID. la mine pe calculator datele sunt corecte
 
 use master;
