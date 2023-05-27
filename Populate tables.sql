@@ -42,6 +42,6 @@ Exec uspAddPerson
 	@UserName = 'Bszabi85',
 	@PHash = 'TestPassword';
 	
---Va genera eroare pentru ca @PNN nu este un CNP VALID. la mine pe calculator datele sunt corecte
+--Va genera eroare pentru ca @PNN nu este un CNP VALID. la mine pe calculator datele sunt corecte 
 
 use master;
