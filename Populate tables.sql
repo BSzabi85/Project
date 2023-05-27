@@ -42,11 +42,4 @@ Exec uspAddPerson
 	@UserName = 'Bszabi85',
 	@PHash = 'Skiterdekel1';
 
-Select 
-*
-From
-Person.Person Pp
-Join Person.Login Pl
-on pp.PersonID=pl.PersonID
-
 use master;
