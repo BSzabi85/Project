@@ -32,14 +32,14 @@ Exec uspAddPerson
 	@Ptype = 2,
 	@FName = 'Banyai',
 	@LName = 'Szabolcs',
-	@PNN = '1850928125788',
-	@Aline1 = 'Str. Florilor, 164/8',
+	@PNN = '1234567890123',
+	@Aline1 = 'Str. Florilor, ',
 	@City = 'Floresti',
 	@Prov = 'Cluj',
 	@PCode = '407280',
-	@PhoneNo = '0040741235002',
+	@PhoneNo = '0040752486002',
 	@Email = 'banyaisz85@gmail.com',
 	@UserName = 'Bszabi85',
-	@PHash = 'Skiterdekel1';
+	@PHash = 'TestPassword';
 
 use master;
