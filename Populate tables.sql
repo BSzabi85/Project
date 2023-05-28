@@ -43,19 +43,19 @@ Exec uspAddPerson
 	@PHash = 'TestPassword';
 
 Exec uspAddPerson
-@Ptype = 3,
-@FName = 'Banyai',
-@MName = 'Csilla',
-@LName = 'Andrea',
-@PNN = '2345678901234',
-@ALine1 = 'Str. Florilor',
-@City = 'Floresti',
-@Prov = 'Cluj',
-@PCode = '407280',
-@PhoneNo = '0040731452390',
-@Email = 'p_c***********a@yahoo.com',
-@UserName = 'Csilla85',
-@PHash = 'Testpass';
+ @Ptype = 3,
+ @FName = 'Banyai',
+ @MName = 'Csilla',
+ @LName = 'Andrea',
+ @PNN = '2345678901234',
+ @ALine1 = 'Str. Florilor',
+ @City = 'Floresti',
+ @Prov = 'Cluj',
+ @PCode = '407280',
+ @PhoneNo = '0040731452390',
+ @Email = 'p_c***********a@yahoo.com',
+ @UserName = 'Csilla85',
+ @PHash = 'Testpass';
 	
 --Va genera eroare pentru ca @PNN nu este un CNP VALID. la mine pe calculator datele sunt corecte 
 
