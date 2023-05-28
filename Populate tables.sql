@@ -29,7 +29,7 @@ RaisError ('Populating table "Person.Person and other dependencie tables',0 ,1) 
 
 
 Exec uspAddPerson 
-	@Ptype = 2,
+	@Ptype = 1,
 	@FName = 'Banyai',
 	@LName = 'Szabolcs',
 	@PNN = '1234567890123',
