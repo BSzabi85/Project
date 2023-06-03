@@ -1,7 +1,7 @@
 use SeniorCare;
 Go
 
-RaisError ('Creating procedures.',0 ,1) With NoWait;
+RaisError ('Creating/altering procedures.',0 ,1) With NoWait;
 Go
 
 Create or Alter Proc uspAddPType
@@ -96,8 +96,8 @@ End;
 Go
 
 Create or Alter Proc uspAddContact
-@CName as NVarchar(256),
-@Id int
+@Id Int,
+@CName as NVarchar(256)
 as
 Begin
 	If Exists ( Select 1 From Person.Contact Where ContactName = @CName)
@@ -243,70 +243,74 @@ Begin
 	Declare @CID as Int = 0;
 	Declare @LastID Int;
 	Exec uspValidCNP @PNNTest = @PNN, @Result = @Res Output;
-	Print @Res;
-	If @Res = 0 
-		Begin
-			If Len(RTrim(LTrim(IsNull(@MName,''))))<>0 
-				Begin
-					Set @FullName = RTrim(LTrim(@FName)) + ' ' + RTrim(LTrim(@MName)) + ' ' + RTrim(LTrim(@LName));
-				End;
-			Else
-				Begin
-					Set @FullName = RTrim(LTrim(@FName)) + ' ' + RTrim(LTrim(@LName));
-				End;
-
-			Insert Into Person.Person 
-				(
-				PersonType,	
-				FirstName, 
-				MiddleName, 
-				LastName, 
-				PNN, 
-				DateModified
-				) 
-				Values
-				(
-				@PType, 
-				@FName, 
-				@MName, 
-				@LName, 
-				@PNN, 
-				Getdate()
-				);
-			Set @LastID = SCOPE_IDENTITY();
-
-			Exec uspAddContact @CName = @FullName;
-
-			Select 
-				@CID = PersonID 
-			From
-				Person.Person
-			Where
-				PNN = @PNN;
-
-			Exec uspAddAddress @PID = @CID, @ALine1 = @ALine1, @ALine2 = @ALine2, 
-			@City = @City, @Prov = @Prov, @Country = @Country, @PCode = @PCode;
-
-			Select 
-				@CID = ContactID
-			From
-				Person.Contact
-			Where
-				ContactName = @FullName;
-
-			Exec uspAddPhone @ContID = @CID, @PhNo = @PhoneNo;
-
-			If @PType >0 and @PType < 6
-				Begin
-					Exec uspAddLogin @PID = @CID, @User = @UserName, @PHash = @PHash
-				End;
+	If not exists ( Select 1 From Person.Person Where PNN = @PNN ) 
+	Begin
+		If @Res = 0 
+			Begin
+				If Len(RTrim(LTrim(IsNull(@MName,''))))<>0 
+					Begin
+						Set @FullName = RTrim(LTrim(@FName)) + ' ' + RTrim(LTrim(@MName)) + ' ' + RTrim(LTrim(@LName));
+					End;
+				Else
+					Begin
+						Set @FullName = RTrim(LTrim(@FName)) + ' ' + RTrim(LTrim(@LName));
+					End;
+	
+				Insert Into Person.Person 
+					(
+					PersonType,	
+					FirstName, 
+					MiddleName, 
+					LastName, 
+					PNN, 
+					DateModified
+					) 
+					Values
+					(
+					@PType, 
+					@FName, 
+					@MName, 
+					@LName, 
+					@PNN, 
+					Getdate()
+					);
+				
+				Select Top 1 @LastID = PersonID  from Person.Person Where PNN=@PNN
+	
+				Exec uspAddContact @ID=@LastID, @CName = @FullName;
+	
+				Select 
+					@CID = PersonID 
+				From
+					Person.Person
+				Where
+					PNN = @PNN;
+	
+				Exec uspAddAddress @PID = @CID, @ALine1 = @ALine1, @ALine2 = @ALine2, 
+				@City = @City, @Prov = @Prov, @Country = @Country, @PCode = @PCode;
+	
+				Select 
+					@CID = ContactID
+				From
+					Person.Contact
+				Where
+					ContactName = @FullName;
+	
+				Exec uspAddPhone @ContID = @CID, @PhNo = @PhoneNo;
+	
+				If @PType >0 and @PType < 6
+					Begin
+						Exec uspAddLogin @PID = @CID, @User = @UserName, @PHash = @PHash
+					End;
+			End;
 		End;
-End;
+End	;
 Go
 
 Create or Alter Proc uspAddMedicines
 @MedName NVarchar(128),
-@MedCon Int,
+@MedCon Decimal(10,2) = NULL,
+@ConType NVarchar(10) = NULL, 
 @Desc NVarchar(Max) = NULL,
 @Mod Int
 as
@@ -317,6 +321,7 @@ Begin
 				(
 				MedicineName,
 				MedicineConcentration,
+				ConcentrationType,
 				Description,
 				ModifierID,
 				DateModified
@@ -325,6 +330,7 @@ Begin
 				(
 				@MedName,
 				@MedCon,
+				@ConType,
 				@Desc,
 				@Mod,
 				Getdate()
