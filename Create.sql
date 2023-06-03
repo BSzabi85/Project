@@ -141,7 +141,8 @@ Begin
 		(
 		MedicineID Int Primary Key Identity(1,1) not NULL,
 		MedicineName NVarchar(128) not NULL,
-		MedicineConcentration Int not NULL,
+		MedicineConcentration Decimal(10,2) NULL,
+		ConcentrationType NVarchar(10) NULL,
 		Description NVarchar(Max) NULL,
 		ModifierID Int not NULL,
 		DateModified DateTime not NULL,
