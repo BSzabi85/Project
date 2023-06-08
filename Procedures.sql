@@ -242,7 +242,8 @@ Begin
 	Declare @FullName as NVarchar(150) = '';
 	Declare @CID as Int = 0;
 	Declare @LastID Int;
-	Exec uspValidCNP @PNNTest = @PNN, @Result = @Res Output;
+	Set @Res = 0;
+	--Exec uspValidCNP @PNNTest = @PNN, @Result = @Res Output; --Disabled due to sensitive data!!!
 	If not exists ( Select 1 From Person.Person Where PNN = @PNN ) 
 	Begin
 		If @Res = 0 
@@ -277,7 +278,7 @@ Begin
 				
 				Select Top 1 @LastID = PersonID  from Person.Person Where PNN=@PNN
 	
-				Exec uspAddContact @ID=@LastID, @CName = @FullName;
+				Exec uspAddContact @ID = @LastID, @CName = @FullName;
 	
 				Select 
 					@CID = PersonID 
@@ -297,8 +298,10 @@ Begin
 					ContactName = @FullName;
 	
 				Exec uspAddPhone @ContID = @CID, @PhNo = @PhoneNo;
-	
-				If @PType >0 and @PType < 6
+				
+				If @PType = 6 Set @PHash = ' ';
+
+				If @PType > 0 and @PType < 6
 					Begin
 						Exec uspAddLogin @PID = @CID, @User = @UserName, @PHash = @PHash
 					End;
@@ -338,13 +341,14 @@ Begin
 		End;
 	Else
 		Begin
+			RaisError(@Medname, 0, 1) With NoWait;
 			RaisError('The medicine already exists...', 0, 1) With NoWait;
 		End;
 End;
 Go
 
 Create or Alter Proc uspAddMedHour
-@MedTime Time
+@MedTime Varchar(5)
 as
 Begin
 	If not exists ( Select 1 From Medical.MedicationHour Where MedicationTime = @MedTime)
@@ -356,7 +360,7 @@ Begin
 				)
 				Values
 				(
-				@MedTime,
+				Cast(@MedTime as time),
 				GETDATE()
 				);
 		End;
@@ -370,7 +374,8 @@ Go
 Create or Alter Proc uspMedication
 @PersID Int,
 @MedID Int,
-@MedHID Int
+@MedHID Int,
+@Dos NVarchar(10)
 as
 Begin
 	Insert Into Medical.Medication
@@ -378,6 +383,7 @@ Begin
 		PersonID,
 		MedicineID,
 		MedicationHourID,
+		Dosage,
 		DateModified
 		)
 		Values
@@ -385,6 +391,7 @@ Begin
 		@PersID,
 		@MedID,
 		@MedHID,
+		@Dos,
 		GetDate()
 		);
 End;
@@ -480,6 +487,8 @@ Begin
 		);
 End;
 Go
+
+
 
 RaisError ('Done.',0 ,1) With NoWait;
 Go
