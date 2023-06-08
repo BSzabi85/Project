@@ -170,6 +170,7 @@ Begin
 		PersonID Int not NULL,
 		MedicineID Int not NULL,
 		MedicationHourID Int not NULL,
+		Dosage NVarChar(10) not NULL,
 		DateModified Datetime not NULL,
 		Foreign Key (PersonID) References Person.Person(PersonID),
 		Foreign Key (MedicineID) References Medical.Medicines(MedicineID),
