@@ -488,7 +488,40 @@ Begin
 End;
 Go
 
+RaisError ('Done.',0 ,1) With NoWait;
+Go
 
+RaisError ('Creating views.',0 ,1) With NoWait;
+Go
+
+Create or Alter View vMedication
+As
+Select 
+	Concat(Pp.FirstName ,
+	Case When Pp.MiddleName <> '' 
+		Then Concat(' ', Pp.MiddleName) 
+		Else '' 
+	End, 
+	' ' , 
+	Pp.LastName) As [Nume],
+	Concat(
+		MedC.MedicineName, 
+		' ', 
+		MedC.MedicineConcentration, 
+		MedC.ConcentrationType) As [Medicament],
+	Concat(
+		Right('0' + Cast(Datepart(Hour, MedH.MedicationTime) As Varchar(2)),2), 
+		':', 
+		Right('0' + Cast(Datepart(Minute, MedH.MedicationTime) As Varchar(2)),2)) As [Ora],
+	Med.Dosage As [Dozaj]
+	From Person.Person Pp
+	Join Medical.Medication Med
+	On Pp.Personid = Med.Personid
+	Join Medical.MedicationHour MedH
+	On Med.MedicationHourID = MedH.MedicationHourID
+	Join Medical.Medicines MedC
+	On MedC.MedicineID = Med.MedicineID;
+Go
 
 RaisError ('Done.',0 ,1) With NoWait;
 Go
