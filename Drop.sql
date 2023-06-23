@@ -1,17 +1,41 @@
 If exists (Select name From sys.databases Where name = 'SeniorCare')
 Begin
 	Exec('
-		Set Nocount On
-
-		RaisError (''Deleting procedures...'',0 ,1) With NoWait;
+		Print ''Deleting procedures...'';
 
 		Use SeniorCare;
 
 		Drop Proc if exists uspAddPType;
 
-		Drop proc if exists uspValidCNP;
+		Drop Proc if exists uspValidCNP;
 
-		RaisError (''Deleting tables...'',0 ,1) With NoWait;
+		Drop Proc if exists uspAddContact;
+
+		Drop Proc if exists uspAddAddress;
+
+		Drop Proc if exists uspAddPhone;
+
+		Drop Proc if exists uspAddEmail;
+
+		Drop Proc if exists uspAddLogin;
+
+		Drop Proc if exists uspAddPerson;
+
+		Drop Proc if exists uspAddMedicines;
+
+		Drop Proc if exists uspAddMedHour;
+
+		Drop Proc if exists uspMedication;
+
+		Drop Proc if exists uspHealth;
+
+		Drop Proc if exists uspEmergencies;
+
+		Drop Proc if exists uspCreateDynamicView;
+
+		Print ''Done.'';
+
+		Print ''Deleting tables...'';
 
 		Drop Table if exists Medical.Emergencies;
 
@@ -22,6 +46,8 @@ Begin
 		Drop Table if exists Medical.MedicationHour;
 
 		Drop Table if exists Medical.Medicines;
+
+		Drop Table if Exists Medical.TempTbl;
 
 		Drop Table if exists Person.Login;
 
@@ -36,12 +62,16 @@ Begin
 		Drop Table if exists Person.Person;
 
 		Drop Table if exists Person.Type;
+
+		Print ''Done.'';
+
+		Print ''Deleting schemas...'';
 	
 		Drop Schema if exists Medical;  
 
 		Drop Schema if exists Person;
 
-		RaisError (''Done.'',0 ,1) With NoWait;
+		Print ''Done.'';
 	');
 
 End;
@@ -50,5 +80,8 @@ Go
 Use master;
 Go
 
+Print 'Deleting database...';
+
 Drop Database if exists SeniorCare;
 Go
+Print 'Done.';
