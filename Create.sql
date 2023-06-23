@@ -1,33 +1,32 @@
 If not exists (Select name from sys.databases where name = 'SeniorCare')
 	Begin
-		RaisError ('Creating database "SeniorCare".',0 ,1) With NoWait;
+		Print 'Creating database "SeniorCare"...';
 		Create Database SeniorCare;
-		RaisError ('"SeniorCare" database created successfully.',0 ,1) With NoWait;
+		Print '"SeniorCare" database created successfully.';
 	End;
 Go
 
-RaisError ('Using "SeniorCare" database.',0 ,1) With NoWait;
 Use SeniorCare;
 Go
 
-RaisError ('Creating database schemas.',0 ,1) With NoWait;
+Print 'Creating database schemas...';
 Go
 
 If not exists (Select 1 From INFORMATION_SCHEMA.SCHEMATA Where SCHEMA_NAME = 'Person')
 	Begin
 		Exec ('Create Schema Person Authorization dbo');
-		RaisError ('"Person" schema created successfully.',0 ,1) With NoWait;
+		Print '"Person" schema created successfully.';
 	End;
 Go
 
 If not exists (Select 1 From INFORMATION_SCHEMA.SCHEMATA Where SCHEMA_NAME='Medical')
 	Begin
 		Exec('Create Schema Medical Authorization dbo');
-		RaisError ('"Medical" schema created successfully.',0 ,1) With NoWait;
+		Print '"Medical" schema created successfully.';
 	End;
 Go
 
-RaisError ('Creating database tables.',0 ,1) With NoWait;
+Print 'Creating database tables...';
 Go
 
 If not exists ( Select 1 From sys.tables Where Name='Person.Type' and Type = 'U')
@@ -38,7 +37,7 @@ Begin
 		TypeName NVarchar(64) not NULL,
 		DateModified DateTime not NULL
 		);
-	RaisError ('Person.Type table created successfully.',0 ,1) With NoWait;
+	Print 'Person.Type table created successfully.';
 End;
 Go
 	
@@ -55,7 +54,7 @@ Begin
 		DateModified Datetime not NULL,
 		Foreign Key (PersonType) References Person.Type(TypeID)
 		);
-	RaisError ('Person.Person table created successfully.',0 ,1) With NoWait;
+	Print 'Person.Person table created successfully.';
 End;
 Go
 
@@ -69,7 +68,7 @@ Begin
 		DateModified DateTime not NULL,
 		Foreign Key (PersonID) References Person.Person(PersonID)
 		);
-	RaisError ('Person.ContactName table created successfully.',0 ,1) With NoWait;
+	Print 'Person.ContactName table created successfully.';
 End;
 Go
 
@@ -88,7 +87,7 @@ Begin
 		DateModified DateTime not NULL,
 		Foreign Key (PersonID) References Person.Person(PersonID)
 		);
-	RaisError ('Person.Address table created successfully.',0 ,1) With NoWait;
+	Print 'Person.Address table created successfully.';
 End;
 Go
 	
@@ -102,7 +101,7 @@ Begin
 		DateModified DateTime not NULL,
 		Foreign Key (ContactID) References Person.Contact(ContactID)
 		);
-	RaisError ('Person.Phone table created successfully.',0 ,1) With NoWait;
+	Print 'Person.Phone table created successfully.';
 End;
 Go
 	
@@ -116,7 +115,7 @@ Begin
 		DateModified Datetime not NULL,
 		Foreign Key (ContactID) References Person.Contact(ContactID)
 		);
-	RaisError ('Person.Email table created successfully.',0 ,1) With NoWait;
+	Print 'Person.Email table created successfully.';
 End;
 Go
 
@@ -131,7 +130,7 @@ Begin
 		DateModified DateTime not NULL,
 		Foreign Key (PersonID) References Person.Person(PersonID)
 		);
-	RaisError ('Person.Login table created successfully.',0 ,1) With NoWait;
+	Print 'Person.Login table created successfully.';
 End;
 Go
 
@@ -148,7 +147,7 @@ Begin
 		DateModified DateTime not NULL,
 		Foreign Key (ModifierID) References Person.Person(PersonID)
 		);
-	RaisError ('Medical.Medicines table created successfully.',0 ,1) With NoWait;
+	Print 'Medical.Medicines table created successfully.';
 End;
 Go
 
@@ -158,7 +157,7 @@ Create Table Medical.MedicationHour(
 	MedicationHourID Int Primary Key Identity not NULL,
 	MedicationTime Time not NULL,
 	DateModified Datetime not NULL);
-	RaisError ('Medical.MedicionHour table created successfully.',0 ,1) With NoWait;
+	Print 'Medical.MedicionHour table created successfully.';
 End;
 Go
 
@@ -170,13 +169,14 @@ Begin
 		PersonID Int not NULL,
 		MedicineID Int not NULL,
 		MedicationHourID Int not NULL,
-		Dosage NVarChar(10) not NULL,
+		Dosage NVarchar(20) not NULL,
+		Necessity TinyInt not NULL,
 		DateModified Datetime not NULL,
 		Foreign Key (PersonID) References Person.Person(PersonID),
 		Foreign Key (MedicineID) References Medical.Medicines(MedicineID),
 		Foreign Key (MedicationHourID) References Medical.MedicationHour(MedicationHourID)
 		);
-	RaisError ('Medical.Medication table created successfully.',0 ,1) With NoWait;
+	Print 'Medical.Medication table created successfully.';
 End;
 Go
 
@@ -200,7 +200,7 @@ Begin
 		Foreign Key (PersonID) References Person.Person(PersonID),
 		Foreign Key (LoginID) References Person.Login(LoginID)
 		);
-	RaisError ('Medical.Health table created successfully.',0 ,1) With NoWait;
+	Print 'Medical.Health table created successfully.';
 End;
 Go
 
@@ -223,9 +223,11 @@ Begin
 		Foreign Key (PersonID) References Person.Person(PersonID),
 		Foreign Key (LoginID) References Person.Login(LoginID)
 		);
-	RaisError ('Medical.Emergencies table created successfully.',0 ,1) With NoWait;
+	Print 'Medical.Emergencies table created successfully.';
 End;
 Go
+
+Print 'Done.';
 
 Use master;
 Go
