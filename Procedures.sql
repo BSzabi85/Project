@@ -1,7 +1,7 @@
 use SeniorCare;
 Go
 
-RaisError ('Creating/altering procedures.',0 ,1) With NoWait;
+Print 'Creating/altering procedures...';
 Go
 
 Create or Alter Proc uspAddPType
@@ -10,7 +10,7 @@ as
 Begin
 	If exists (Select 1 From Person.Type Where TypeName = @TypeName)
 	Begin
-		Print 'Duplicate found!!!';
+		Print 'Warning!!! Person type ' + Upper(@TypeName) + ' already exists...';
 	End;
 	Else
 	Begin
@@ -40,35 +40,35 @@ Begin
 	Set @Result = 0;
 	If LEN(@PNNTest)<>13	   
 		Begin	
-			RaisError ('PNN lenght does not meet the required length!',0 ,1) With NoWait; --Lungime eronata.
+			Print 'Warning!!! Personal Numeric Number (PNN/CNP) lenght does not meet the required length...'; --Lungime eronata.
   			Set @Result = 1;
 			Return;
 		End;
 	Else
 	If ISNUMERIC(@PNNTest)<>1 and @PNNTest like '%[^0-9]%' 
 		Begin
-			RaisError ('PNN must contain only numbers!',0 ,1) With NoWait;  --Nu este format doar din cifre.
+			Print 'Warning!!! Personal Numeric Number (PNN/CNP) must contain only numbers...';  --Nu este format doar din cifre.
    			Set @Result = 2;
 			Return;
 		End;
 	Else	
 	IF Left(@PNNTest,1) not like '[1-9]'
 		Begin 
-			RaisError ('First number can not be 0!',0 ,1) With NoWait; --Se verifica, daca prima cifra este intr 1 si 9
+			Print 'Warning!!! First number can not be 0...'; --Se verifica, daca prima cifra este intr 1 si 9
    			Set @Result = 3; 
 			Return;
 		End;
 	Else
 	IF @ConvDate is NULL Or @ConvDate < '1753-01-01' Or @ConvDate > '9999-12-31'
 		Begin
-			RaisError ('Invalid date!',0 ,1) With NoWait; --Se verifica daca data nasterii este valida
+			Print 'Warning!!! Invalid date...'; --Se verifica daca data nasterii este valida
   			Set @Result = 4; 
 			Return;
 		End;
 	Else
 	IF CAST(SUBSTRING(@PNNTest,8,2) as TinyInt) not between 1 and 52
 		Begin
-			RaisError ('Invalid region code!',0 ,1) With NoWait; --Se verifica validitatea codului de judet
+			Print 'Warning!!! Invalid region code...'; --Se verifica validitatea codului de judet
    			Set @Result = 5;
 			Return;
 		End;
@@ -87,7 +87,7 @@ Begin
 		
 	If CAST(SUBSTRING(@PNNTest, 13,1) As TinyInt)<>@PRes 
 		Begin			
-			RaisError ('Invalid control number!',0 ,1) With NoWait; --Se verifica cifra de control
+			Print 'Warning!!! Invalid control number...'; --Se verifica cifra de control
    			Set @Result = 6;
 			Return;
 		End;
@@ -102,7 +102,7 @@ as
 Begin
 	If Exists ( Select 1 From Person.Contact Where ContactName = @CName)
 	Begin
-		Print 'Duplicate found!!!';
+		Print 'Warning!!! The contact ' + Upper(@CName) + ' already exists...';
 	End
 	Else
 	Begin
@@ -341,8 +341,7 @@ Begin
 		End;
 	Else
 		Begin
-			RaisError(@Medname, 0, 1) With NoWait;
-			RaisError('The medicine already exists...', 0, 1) With NoWait;
+			Print 'Warning!!! The medicine ' + upper(@MedName) + ' already exists...';
 		End;
 End;
 Go
@@ -366,35 +365,38 @@ Begin
 		End;
 	Else
 		Begin
-			RaisError ('The medication hour already exists!!!', 0, 1) With NoWait;
+			Print 'Warning!!! The medication hour already exists...';
 		End
 End;
 Go
 
 Create or Alter Proc uspMedication
-@PersID Int,
-@MedID Int,
-@MedHID Int,
-@Dos NVarchar(10)
-as
-Begin
-	Insert Into Medical.Medication
-		(
-		PersonID,
-		MedicineID,
-		MedicationHourID,
-		Dosage,
-		DateModified
-		)
-		Values
-		(
-		@PersID,
-		@MedID,
-		@MedHID,
-		@Dos,
-		GetDate()
-		);
-End;
+	@PersID Int,
+	@MedID Int,
+	@MedHID Int,
+	@Dos NVarchar(20),
+	@Nec TinyInt = 1
+	as
+	Begin
+		Insert Into Medical.Medication
+			(
+			PersonID,
+			MedicineID,
+			MedicationHourID,
+			Dosage,
+			Necessity,
+			DateModified
+			)
+			Values
+			(
+			@PersID,
+			@MedID,
+			@MedHID,
+			@Dos,
+			@Nec,
+			GetDate()
+			);
+	End;
 Go
 
 Create or Alter Proc uspHealth
@@ -488,43 +490,277 @@ Begin
 End;
 Go
 
-RaisError ('Done.',0 ,1) With NoWait;
-Go
-
-RaisError ('Creating views.',0 ,1) With NoWait;
-Go
-
-Create or Alter View vMedication
+Create or Alter Proc uspGetPersonName
+@PersID Int,
+@PersName NVarchar(256) Output
 As
-Select 
-	Concat(Pp.FirstName ,
-	Case When Pp.MiddleName <> '' 
-		Then Concat(' ', Pp.MiddleName) 
-		Else '' 
-	End, 
-	' ' , 
-	Pp.LastName) As [Nume],
-	Concat(
-		MedC.MedicineName, 
-		' ', 
-		MedC.MedicineConcentration, 
-		MedC.ConcentrationType) As [Medicament],
-	Concat(
-		Right('0' + Cast(Datepart(Hour, MedH.MedicationTime) As Varchar(2)),2), 
-		':', 
-		Right('0' + Cast(Datepart(Minute, MedH.MedicationTime) As Varchar(2)),2)) As [Ora],
-	Med.Dosage As [Dozaj]
-	From Person.Person Pp
-	Join Medical.Medication Med
-	On Pp.Personid = Med.Personid
-	Join Medical.MedicationHour MedH
-	On Med.MedicationHourID = MedH.MedicationHourID
-	Join Medical.Medicines MedC
-	On MedC.MedicineID = Med.MedicineID;
+Begin
+	Set @PersName = (
+		Select 
+			Concat(p.FirstName ,
+			Case When p.MiddleName <> '' 
+				Then Concat(' ',p. MiddleName) 
+				Else '' 
+			End, 
+			' ' , 
+			p.LastName) 
+		From Person.Person p
+		Where p.PersonID = @PersID
+	)
+End;
 Go
 
-RaisError ('Done.',0 ,1) With NoWait;
+Create Or Alter Proc uspGetMedName
+@MedID Int,
+@MediName NVarchar(256) Output
+As
+Begin
+	Set @MediName = (
+	Select 
+		Concat
+		(
+		MedicineName, 
+		' ', 
+		MedicineConcentration, 
+		ConcentrationType
+		) 
+	From Medical.Medicines 
+	Where MedicineID = @MedID);
+End;
 Go
+
+Create or Alter Proc uspCreateDynamicView
+as
+Begin
+    Declare @Columns NVarchar(MAX);
+    Declare @Sql NVarchar(MAX);
+
+    -- Generate the list of columns excluding ID, PersonID, and MedID
+    Select @Columns = STRING_AGG(QUOTENAME(COLUMN_NAME), ', ')
+    From INFORMATION_SCHEMA.COLUMNS
+    Where TABLE_NAME = 'TempTbl'
+        and COLUMN_NAME not in ('ID', 'PersonID', 'MedicineID');
+
+    -- Create the dynamic SQL statement for the view
+    Set @Sql = N'Create or Alter View vViewMedicationList AS
+                 Select ' + @Columns + N'
+                 From Medical.TempTbl;';
+
+    -- Execute the dynamic SQL
+    Exec sp_executesql @Sql;
+End;
+Go
+
+Create or Alter Proc uspCreateTempTbl
+As
+Begin
+
+	--Declare general variables.
+
+	Declare @ColName Varchar(20);
+	Declare @RowCount Int;
+	Declare @CCount Int;
+	Declare @Sql NVARCHAR(Max);
+	Declare @Dosage NVarchar(20);
+
+	Set NoCount On;
+
+	Print 'Preparing temporary table...';
+
+	Set @CCount = 1;
+
+	--Erase old table if exists.
+
+	Drop Table if exists Medical.TempTbl;
+
+	Set @RowCount = (Select Max(MedicationHourID) From Medical.MedicationHour);
+
+	-- Count Medication Hours to create the propper ammount of columns.
+
+	While @CCount <= @RowCount
+	Begin
+
+		Set @ColName = 
+			(
+			SELECT CONCAT
+				(
+				RIGHT('0' + CAST(DATEPART(Hour, MedicationTime) AS VARCHAR(2)), 2),
+				':',
+				RIGHT('0' + CAST(DATEPART(Minute, MedicationTime) AS VARCHAR(2)), 2)
+				)
+			FROM Medical.MedicationHour
+			Where MedicationHourID = @CCount
+			);
+
+		-- Create the temporary table with the necessary columns.
+
+		If not exists (Select 1 From sys.tables Where Name='TempTbl' and Type = 'U') 
+			Begin
+				Set @Sql = 
+					N'Create Table Medical.TempTbl
+						(
+						ID Int Primary Key Identity(1,1) not null, 
+						PersonID Int not null, 
+						MedicineID Int not null, 
+						Nume_Persoana NVarChar(256) not null, 
+						Medicament Varchar(128) not null,
+						' + QUOTENAME(@ColName) + ' NVarchar(20))';
+				Exec sp_executesql @Sql;
+			End;
+		Else
+			Begin
+				Set @Sql = 
+					N'Alter Table Medical.TempTbl Add ' + QUOTENAME(@ColName) + ' NVarchar(20)';
+				Exec sp_executesql @Sql;
+			End;
+
+		Set @CCount += 1;
+	End;
+
+	Alter Table Medical.Temptbl Add Necesitate Tinyint;
+
+	-- Get number of patients.
+
+	Declare @PCount Int = 1;
+	Set @Sql = '';	
+	Set @RowCount = 
+		(
+		Select count(distinct PersonID)
+		From Medical.Medication
+		);
+		
+	While @PCount <= @RowCount
+	Begin
+
+		Declare @PName NVarchar(256) = '';
+		Declare @Medicament NVarChar(256) = '';
+		Declare @PID Int;
+		Declare @MCount Int = 1;
+
+		With NmbRows as
+			(
+			Select distinct MyTbl.PersonID as RowNum
+			From Medical.Medication	MyTbl
+			) 
+
+		Select @Pid = RowNum
+		From  (
+			Select 
+			*,
+			ROW_NUMBER() Over (Order by RowNum) as RowNr 
+			From NmbRows) as NewTbl
+		Where NewTbl.RowNr = @PCount;
+		
+		--Get pacient name
+
+		Exec uspGetPersonName @PersID = @PID, @PersName = @PName Output;
+		
+		--Count the number of medicines for current pacient.
+
+		While @MCount <= 
+			(
+			Select Count(Distinct MedicineID) 
+			From Medical.Medication 
+			Where PersonID = @PID
+			)
+		Begin
+
+			Declare @HCount int = 1;
+			Declare @MID Int;
+
+			Set @MID = 
+				(
+				Select MedicineID 
+				From 
+					(
+					Select 
+					distinct t.MedicineID, 
+					ROW_NUMBER () over(order by t.MedicineID) as RowNr
+					From Medical.Medication t 
+					Where t.PersonID = @PID 
+					group by t.MedicineID
+					) MedID
+				Where MedID.RowNr = @MCount
+				);
+
+			-- Get medicine name
+
+			Exec uspGetMedName @MedID = @MID, @MediName = @Medicament Output;
+
+			-- Insert pacient ID, medicine ID, patient name and medicine name into temporary table.
+
+			Insert Into Medical.TempTbl 
+				(
+				PersonID,
+				MedicineID,
+				Nume_Persoana, 
+				Medicament
+				)
+				Values 
+				(
+				@PID,
+				@MID,
+				@PName,
+				@Medicament
+				);
+
+			-- Get dosage of medicine for each medication hour.
+
+			While @HCount <= 
+				(
+				Select 
+				Max(MedicationHourID) 
+				From Medical.MedicationHour
+				)
+				Begin
+				
+					Select @ColName = Column_Name
+					From INFORMATION_SCHEMA.COLUMNS
+					Where TABLE_NAME = 'TempTbl' and ORDINAL_POSITION = @HCount + 5;
+
+					Select @Dosage = Isnull((
+										Select Top 1 m.Dosage
+										From Medical.Medication m
+										Join Medical.MedicationHour h
+										On m.MedicationHourID = h.MedicationHourID
+										Where h.MedicationHourID = @HCount and m.PersonID = @PID and m.MedicineID = @MID
+										),0);
+
+					-- Insert dosage into table depending on medication hour.
+
+					Set @Sql = 
+						N'Update Medical.TempTbl Set ' + QUOTENAME(@ColName) + N' = @Dosage
+						Where PersonID = @PID and MedicineID = @MID';
+
+					Exec sp_executesql @Sql, N'@Dosage NVarchar(20), @MID Int, @Pid Int', @Dosage, @MID, @PID;
+
+					Set @HCount += 1;
+				End; 
+
+				-- Get and add medicine Necesitate for current patient and medicine
+				-- Some medicines are taken only if needed, and asuming a medication is either mandatory or only when needed through the whole day.
+				
+				Update Medical.TempTbl  
+				Set Necesitate = 
+					(
+					Select distinct Necessity 
+					From Medical.Medication 
+					Where PersonID = @Pid and MedicineID = @MID
+					)
+				Where PersonID = @PID and MedicineID = @MID;
+
+			Set @MCount += 1;
+		End;
+		Set @PCount += 1;
+	End;
+	Exec uspCreateDynamicView
+	Print 'Done.';
+End;
+Go
+
+Print 'Done.';
 
 Use master;
 Go
+
+
