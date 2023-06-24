@@ -399,97 +399,6 @@ Create or Alter Proc uspMedication
 	End;
 Go
 
-Create or Alter Proc uspHealth
-@PersID Int,
-@BloodPresHi Int = NULL,
-@BloodPresLo Int = NULL,
-@HeartRt Int = NULL,
-@BloodSg Int = NULL,
-@Temp Int = NULL,
-@Satur Int = NULL,
-@UrineQty Int = NULL,
-@Band NVarchar(512) = NULL,
-@LogID Int,
-@ChkDt Date
-as
-Begin
-	Insert Into Medical.Health
-		(
-		PersonID,
-		BloodPressureHigh,
-		BloodPressureLow,
-		HeartRate,
-		BloodSugar,
-		Temperature,
-		Saturation,
-		UrineQTY,
-		Bandages,
-		LoginID,
-		CheckDate,
-		DateModified
-		)
-		Values
-		(
-		@PersID,
-		@BloodPresHi,
-		@BloodPresLo,
-		@HeartRt,
-		@BloodSg,
-		@Temp,
-		@Satur,
-		@UrineQty,
-		@Band,
-		@LogID,
-		@ChkDt,
-		GetDate()
-		);
-End;
-Go
-
-Create or Alter Proc uspEmergencies
-@PersID Int,
-@BloodPresHi Int = NULL,
-@BloodPresLo Int = NULL,
-@HeartRt Int = NULL,
-@BloodSg Int = NULL,
-@Temp Int = NULL,
-@Satur Int = NULL,
-@Desc NVarchar(Max),
-@LogID Int,
-@EmgDt Date
-as
-Begin
-	Insert Into Medical.Emergencies
-		(
-		PersonID,
-		BloodPressureHigh,
-		BloodPressureLow,
-		HeartRate,
-		BloodSugar,
-		Temperature,
-		Saturation,
-		EmgDescription,
-		LoginID,	
-		EmergencieDate,
-		DateModified
-		)
-		Values
-		(
-		@PersID,
-		@BloodPresHi,
-		@BloodPresLo,
-		@HeartRt,
-		@BloodSg,
-		@Temp,
-		@Satur,
-		@Desc,
-		@LogID,
-		@EmgDt,
-		GetDate()
-		);
-End;
-Go
-
 Create or Alter Proc uspGetPersonName
 @PersID Int,
 @PersName NVarchar(256) Output
@@ -535,18 +444,21 @@ Begin
     Declare @Columns NVarchar(MAX);
     Declare @Sql NVarchar(MAX);
 
-    -- Generate the list of columns excluding ID, PersonID, and MedID
+    -- Generate the list of columns excluding ID, PersonID, and MedID.
+
     Select @Columns = STRING_AGG(QUOTENAME(COLUMN_NAME), ', ')
     From INFORMATION_SCHEMA.COLUMNS
     Where TABLE_NAME = 'TempTbl'
         and COLUMN_NAME not in ('ID', 'PersonID', 'MedicineID');
 
-    -- Create the dynamic SQL statement for the view
+    -- Create the dynamic SQL statement for the view.
+
     Set @Sql = N'Create or Alter View vViewMedicationList AS
                  Select ' + @Columns + N'
                  From Medical.TempTbl;';
 
-    -- Execute the dynamic SQL
+    -- Execute the dynamic SQL.
+
     Exec sp_executesql @Sql;
 End;
 Go
@@ -762,5 +674,3 @@ Print 'Done.';
 
 Use master;
 Go
-
-
