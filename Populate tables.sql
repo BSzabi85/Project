@@ -1537,12 +1537,12 @@ Go
 Exec uspMedication @PersID = 24, @MedID = 6, @MedHID = 1, @Dos = '1', @Nec = 1;
 Go
 
-Exec uspCreateTempTbl;
-Go
-
 Print 'Done.';
 Go
 
+Exec uspCreateTempTbl;
+Go
+	
 Select * from vViewMedicationList order by Nume_Persoana, Medicament
 
 use master;
