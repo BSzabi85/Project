@@ -1540,13 +1540,13 @@ Go
 Print 'Done.';
 Go
 
+-- Testline
+	
 Exec uspCreateTempTbl;
 Go
 
--- Testline
-
 Select * 
 From vViewMedicationList v
-Order by v.Nume_Persoana, v.Medicament
+Order by v.Nume_Persoana, v.Medicament;
 
 Use master;
