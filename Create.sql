@@ -180,53 +180,6 @@ Begin
 End;
 Go
 
-If not exists ( Select 1 From sys.tables Where Name='Medical.Health' and Type = 'U')
-Begin
-	Create Table Medical.Health
-		(
-		HealthID Int Primary Key Identity(1,1) not NULL,
-		PersonID Int not NULL,
-		BloodPressureHigh Int NULL,
-		BloodPressureLow Int NULL,
-		HeartRate Int NULL,
-		BloodSugar Int NULL,
-		Temperature Tinyint NULL,
-		Saturation Tinyint NULL,
-		UrineQTY Int NULL,
-		Bandages NVarchar(512) NULL,
-		LoginID Int not NULL,
-		CheckDate Date not NULL,
-		DateModified Datetime not NULL,
-		Foreign Key (PersonID) References Person.Person(PersonID),
-		Foreign Key (LoginID) References Person.Login(LoginID)
-		);
-	Print 'Medical.Health table created successfully.';
-End;
-Go
-
-If not exists ( Select 1 From sys.tables Where Name='Medical.Emergencies' and Type = 'U')
-Begin
-	Create Table Medical.Emergencies
-		(
-		EmergencyID Int Primary Key Identity(1,1) not NULL,
-		PersonID Int not NULL,
-		BloodPressureHigh Int NULL,
-		BloodPressureLow Int NULL,
-		HeartRate Int NULL,
-		BloodSugar Int NULL,
-		Temperature Tinyint NULL,
-		Saturation Tinyint NULL,
-		EmgDescription NVarchar(Max) not NULL,
-		LoginID Int not NULL,
-		EmergencieDate Date not NULL,
-		DateModified DateTime not NULL,
-		Foreign Key (PersonID) References Person.Person(PersonID),
-		Foreign Key (LoginID) References Person.Login(LoginID)
-		);
-	Print 'Medical.Emergencies table created successfully.';
-End;
-Go
-
 Print 'Done.';
 
 Use master;
