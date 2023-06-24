@@ -1542,7 +1542,11 @@ Go
 
 Exec uspCreateTempTbl;
 Go
-	
-Select * from vViewMedicationList order by Nume_Persoana, Medicament
 
-use master;
+-- Testline
+
+Select * 
+From vViewMedicationList v
+Order by v.Nume_Persoana, v.Medicament
+
+Use master;
