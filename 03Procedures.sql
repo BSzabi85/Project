@@ -672,5 +672,14 @@ Go
 
 Print 'Done.';
 
+--Testline.
+
+Exec uspCreateTempTbl;
+Go
+
+Select * 
+From vViewMedicationList v
+Order by v.Nume_Persoana, v.Medicament;
+
 Use master;
 Go
