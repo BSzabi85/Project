@@ -108,3 +108,9 @@ Print 'Deleting database...';
 Drop Database if exists SeniorCare;
 Go
 Print 'Done.';
+
+
+
+-- transfer to 04
+
+Exec uspAddDiagnoseList 
