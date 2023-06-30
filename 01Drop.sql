@@ -107,4 +107,6 @@ Print 'Deleting database...';
 
 Drop Database if exists SeniorCare;
 Go
+
 Print 'Done.';
+Go
