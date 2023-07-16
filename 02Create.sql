@@ -197,8 +197,10 @@ Begin
 	Create Table Medical.DiagnoseList
 		(
 		DiagnoseID Int Primary Key Identity(1,1) not NULL,
+		Code NVarchar(20) Not Null,
 		Diagnose NVarchar(256) not NULL,
-		Datemodified Datetime Default Getdate()
+		Datemodified Datetime Default Getdate(),
+		Constraint UQ_DiagnoseList_Code Unique (Code)
 		);
 	Print 'Medical.DiagnoseList table created successfully.';
 End;
@@ -210,10 +212,10 @@ Begin
 		(
 		PacientDianoseID Int Primary Key Identity(1,1) not NULL,
 		PersonID Int not NULL,
-		DiagnoseID Int not NULL,
+		DiagnoseID NVarChar(20) not NULL,
 		Datemodified Datetime Default Getdate(),
 		Foreign Key (PersonID) References Person.Person(PersonID),
-		Foreign Key (DiagnoseID) References Medical.DiagnoseList(DiagnoseID),		
+		Foreign Key (DiagnoseID) References Medical.DiagnoseList(Code)		
 		);
 	Print 'Medical.PacientDianoses table created successfully.';
 End;
