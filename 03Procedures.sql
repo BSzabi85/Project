@@ -329,7 +329,7 @@ Create or Alter Proc uspAddMedicines
 as
 Begin
 	Set Nocount On;
-	If not exists ( Select 1 From Medical.Medicines Where MedicineName = @MedName)
+	If not exists ( Select 1 From Medical.Medicines Where MedicineName = @MedName and Medicineconcentration = @MedCon )
 		Begin
 			Insert Into Medical.Medicines
 				(
@@ -352,7 +352,7 @@ Begin
 		End;
 	Else
 		Begin
-			Print 'Warning!!! The medicine ' + upper(@MedName) + ' already exists...';
+			Print 'Warning!!! The medicine ' + upper(@MedName) + ' having concentration of ' + @MedCon + @ConType + ' already exists...';
 		End;
 End;
 Go
@@ -706,14 +706,15 @@ as
 Go
 
 Create or Alter Proc uspAddDiagnoseList
+@Code NVarChar(20),
 @Diag NVarchar(256)
 as
 	Begin
 		Set Nocount On;
-		If not exists (Select 1 From Medical.DiagnoseList Where Diagnose  = @Diag)
+		If not exists (Select 1 From Medical.DiagnoseList Where Diagnose  = @Diag and Code = @Code)
 			Begin
-				Insert Into Medical.DiagnoseList(Diagnose) 
-					Values (@Diag);
+				Insert Into Medical.DiagnoseList(Code, Diagnose) 
+					Values (@Code, @Diag);
 			End;
 		Else
 			Begin
@@ -724,7 +725,7 @@ Go
 
 Create or Alter Proc uspAddPacientDiagnose
 @PID Int,
-@DID Int,
+@DID NVarChar(20),
 @Mod Int
 as
 	Begin
@@ -749,18 +750,7 @@ as
 	End;
 Go
 
-
-
 Print 'Done.';
-
---Testline.
-
---Exec uspCreateTempTbl;
---Go
-
---Select * 
---From vMedicationList v
---Order by v.Nume_Persoana, v.Medicament;
 
 Use master;
 Go
