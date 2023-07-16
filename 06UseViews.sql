@@ -43,3 +43,15 @@ Select *
 From vPacientDiagnose V
 Order by V.FirstName, V.LastName;
 Go
+
+Exec uspCreateTempTbl;
+Go
+
+Select * 
+From vMedicationList v
+Order by v.Nume_Persoana, v.Medicament;
+
+exec uspChangeStatus @Id = 39, @Act = 1
+
+select * from person.Person order by FirstName
+select * from Medical.DiagnoseList
