@@ -60,12 +60,13 @@ as
 		P.FirstName,
 		P.MiddleName,
 		P.LastName,
+		Dl.Code,
 		Dl.Diagnose
 	From Person.Person P
 	Join Medical.PacientDiagnoses Pd
 	on P.PersonID = Pd.PersonID
 	Join Medical.DiagnoseList Dl
-	on Dl.DiagnoseID = Pd.DiagnoseID
+	on Dl.Code = Pd.DiagnoseID
 	Where P.PersonType = 6 and P.Active = 1;
 Go
 
