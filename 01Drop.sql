@@ -60,6 +60,10 @@ Begin
 
 		Print ''Deleting tables...'';
 
+		Drop Table if exists Medical.PacientDiagnoses;
+
+		Drop Table if exists Medical.DiagnoseList;
+
 		Drop Table if exists Medical.Emergencies;
 
 		Drop Table if exists Medical.Health;
@@ -107,6 +111,4 @@ Print 'Deleting database...';
 
 Drop Database if exists SeniorCare;
 Go
-
 Print 'Done.';
-Go
